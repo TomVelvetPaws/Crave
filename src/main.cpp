@@ -4078,6 +4078,7 @@ bool ProcessMessages(CNode* pfrom)
         }
 
         if (!fRet)
+            pfrom->Misbehaving(10);
             LogPrintf("ProcessMessage(%s, %u bytes) FAILED\n", strCommand, nMessageSize);
 
         break;
