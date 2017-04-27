@@ -10,8 +10,8 @@ ARCH:=$(system lscpu | head -n 1 | awk '{print $2}')
 
 DEFS=-DBOOST_SPIRIT_THREADSAFE
 DEFS += -DUSE_SECP256K1
-DEFS += $(addprefix -I,$(CURDIR) $(CURDIR)/obj $(BOOST_INCLUDE_PATH) $(BDB_INCLUDE_PATH) $(OPENSSL_INCLUDE_PATH))
-LIBS = $(addprefix -L,$(BOOST_LIB_PATH) $(BDB_LIB_PATH) $(OPENSSL_LIB_PATH))
+DEFS += $(addprefix -I,$(CURDIR) $(CURDIR)/obj $(BOOST_INCLUDE_PATH) $(BDB_INCLUDE_PATH) $(OPENSSL_INCLUDE_PATH) $(CURDIR)/secp256k1/include)  
+LIBS = $(addprefix -L,$(BOOST_LIB_PATH) $(BDB_LIB_PATH) $(OPENSSL_LIB_PATH) $(CURDIR)/secp256k1)
 
 LMODE = dynamic
 LMODE2 = dynamic
@@ -150,13 +150,13 @@ OBJS= \
     obj/masternode.o \
     obj/rpcdarksend.o \
     obj/spork.o \
-    obj/crypto/hmac_sha256.o \
-    obj/crypto/hmac_sha512.o \
-    obj/crypto/rfc6979_hmac_sha256.o \
-    obj/crypto/ripemd160.o \
-    obj/crypto/sha1.o \
-    obj/crypto/sha256.o \
-    obj/crypto/sha512.o
+    crypto/hmac_sha256.o \
+    crypto/hmac_sha512.o \
+    crypto/rfc6979_hmac_sha256.o \
+    crypto/ripemd160.o \
+    crypto/sha1.o \
+    crypto/sha256.o \
+    crypto/sha512.o
 
 ifdef USE_NATIVE_I2P
 	OBJS += obj/i2p.o
@@ -181,9 +181,14 @@ LIBS += $(CURDIR)/leveldb/libleveldb.a $(CURDIR)/leveldb/libmemenv.a
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/include)
 DEFS += $(addprefix -I,$(CURDIR)/leveldb/helpers)
 OBJS += obj/txdb-leveldb.o
+
 leveldb/libleveldb.a:
 	@echo "Building LevelDB ..."; cd leveldb; make libleveldb.a libmemenv.a; cd ..;
 obj/txdb-leveldb.o: leveldb/libleveldb.a
+
+
+#DEFS += $(addprefix -I,$(CURDIR)/secp256k1/include)
+
 
 # auto-generated dependencies:
 -include obj/*.P
@@ -214,8 +219,10 @@ craved: $(OBJS:obj/%=obj/%)
 
 clean:
 	-rm -f craved
+	-rm -f crypto/*.o
 	-rm -f obj/*.o
 	-rm -f obj/*.P
+	-rm -f obj/*.d
 	-rm -f obj/build.h
 
 FORCE:

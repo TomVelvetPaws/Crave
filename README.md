@@ -1,3 +1,32 @@
+Command to clone and build:
+
+sudo apt-get install git && git clone https://github.com/ObsidianSorceress/Crave && cd Crave && sudo chmod 775 s_setup.sh && ./s_setup.sh && ./s_build_qt.sh
+
+
+
+
+To update and install deps:
+sudo chmod 775 s_setup.sh   
+
+
+To build graphical wallet:
+./s_build_qt.sh          
+
+
+To build daemon:
+./s_build_daemon.sh   
+
+
+To build and install daemon:
+./s_build_install_daemon.sh  
+
+
+To cleanup after previous build:
+./s_clean.sh   
+
+
+
+
 
 Crave development tree
 
